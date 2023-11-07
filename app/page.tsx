@@ -16,7 +16,7 @@ export default function Home() {
   return (
     <div className="h-[calc(100vh-64px)] w-full flex flex-col items-center mx-auto pt-6 px-4 max-w-[1200px]">
       <Panel />
-      <div className="md:min-w-[680px] w-full">
+      <div className="md:min-w-[680px] w-full pb-20">
         <TabController tab={tab} setTab={setTab} />
         <div className="pt-6"> {renderTab[tab as keyof object]}</div>
       </div>

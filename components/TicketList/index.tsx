@@ -1,49 +1,25 @@
 import React from "react";
 import { TicketDropdown } from "../TicketDropdown";
+import useLittoryPlayerListAPI from "@/hook/services/lotteryPlayerList.service";
 
 export interface UsersList {
-  firstName: string;
-  lastName: string;
   email: string;
-  ticketCode: number[];
+  fullName: string;
+  prize: number;
+  ticketDetail: number[];
   id: number;
 }
 
 export const TicketList = () => {
-  const usersList: UsersList[] = [
-    {
-      firstName: "abc",
-      lastName: "xyz",
-      email: "abcxyz@gmail.com",
-      ticketCode: [123, 236, 562, 890, 321, 234, 234, 543, 765, 234, 456, 654],
-      id: 1,
-    },
-    {
-      firstName: "abc",
-      lastName: "xyz",
-      email: "abcxyz@gmail.com",
-      ticketCode: [654],
-      id: 1,
-    },
-    {
-      firstName: "abc",
-      lastName: "xyz",
-      email: "abcxyz@gmail.com",
-      ticketCode: [654],
-      id: 1,
-    },
-    {
-      firstName: "abc",
-      lastName: "xyz",
-      email: "abcxyz@gmail.com",
-      ticketCode: [123, 236, 562, 890, 321, 234, 234, 543, 765, 234, 456, 654],
-      id: 1,
-    },
-  ];
+  const lotteryPlayerListAPI = useLittoryPlayerListAPI();
+  console.log(lotteryPlayerListAPI);
 
   const hashEmail = (email: string) => {
     return email.replace(/(\S{2})(\S*)@/g, "$1***@");
   };
+
+  if (!lotteryPlayerListAPI.data) return null;
+
   return (
     <table className="w-full h-full bg-white rounded-lg shadow-lg">
       <thead className="px-6 text-[#82878C] text-sm border-b border-neutral-100 shadow-sm">
@@ -54,22 +30,20 @@ export const TicketList = () => {
         </tr>
       </thead>
       <tbody>
-        {usersList.map((user) => (
+        {lotteryPlayerListAPI.data.map((user: UsersList) => (
           <tr key={user.email} className="border-b border-neutral-100">
             <td className="py-3 px-2 text-center font-bold">{user.id}</td>
             <td className="py-3 px-2">
-              <p className="font-bold text-lg">
-                {user.firstName + " " + user.lastName}
-              </p>
+              <p className="font-bold text-lg">{user.fullName}</p>
               <p className="text-[#82878C] pt-0.5 text-sm">
                 {hashEmail(user.email)}
               </p>
             </td>
             <td className="py-3 px-2 text-lg">
-              {user.ticketCode.length > 1 ? (
-                <TicketDropdown ticketList={user.ticketCode} />
+              {user.ticketDetail.length > 1 ? (
+                <TicketDropdown ticketList={user.ticketDetail} />
               ) : (
-                user.ticketCode[0]
+                user.ticketDetail[0]
               )}
             </td>
           </tr>

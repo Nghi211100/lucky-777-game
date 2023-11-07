@@ -1,8 +1,12 @@
+import CheckLogin from "@/app/features/checkLogin";
+import useAnnounceLotteryPrizeAPI from "@/hook/services/announceLotteryPrize.service";
+import useAvailablePrizeLevelAPI from "@/hook/services/availablePrizeLevel.service";
 import clsx from "clsx";
 import Image from "next/image";
 import React, { useState } from "react";
 
 export const Game = () => {
+  const checkLogin = CheckLogin();
   const [numbOne, setNumbOne] = useState(0);
   const [numbTwo, setNumbTwo] = useState(0);
   const [numbThree, setNumbThree] = useState(0);
@@ -17,15 +21,24 @@ export const Game = () => {
     return numb;
   });
 
+  const availablePrizeLevelAPI = useAvailablePrizeLevelAPI();
+  const announceLotteryPrizeAPI = useAnnounceLotteryPrizeAPI();
   const handleClickPlay = async () => {
     setAvailable(false);
-
     setTimeRun(7);
     setScrollValue(7100);
-
-    setNumbOne(Math.floor(Math.random() * 10));
-    setNumbTwo(Math.floor(Math.random() * 10));
-    setNumbThree(Math.floor(Math.random() * 10));
+    if (availablePrizeLevelAPI.data?.prize) {
+      const result = await announceLotteryPrizeAPI.mutateAsync(
+        availablePrizeLevelAPI.data
+      );
+      setTimeRun(7);
+      setScrollValue(7100);
+      if (result) {
+        setNumbOne(Math.floor(result.prizeTicket / 100));
+        setNumbTwo(Math.floor(result.prizeTicket / 10) % 10);
+        setNumbThree(result.prizeTicket % 10);
+      }
+    }
   };
 
   const handleClickRefresh = async () => {
@@ -115,27 +128,29 @@ export const Game = () => {
             ))}
           </div>
         </div>
-        <div className="absolute -bottom-16 left-20 flex gap-6 pt-6">
-          <button
-            onClick={handleClickPlay}
-            className={clsx(
-              "bg-[#08CF7C] hover:bg-[#009937]",
-              "rounded-lg",
-              "px-7 py-2.5",
-              "cursor-pointer",
-              "text-white font-bold",
-              !available && "pointer-events-none opacity-70"
-            )}
-          >
-            Quay
-          </button>
-          <button
-            onClick={handleClickRefresh}
-            className="bg-[#E53535] cursor-pointer rounded-lg px-4 py-2.5 text-white font-bold"
-          >
-            Làm mới
-          </button>
-        </div>
+        {checkLogin && (
+          <div className="absolute -bottom-16 left-20 flex gap-6 pt-6">
+            <button
+              onClick={handleClickPlay}
+              className={clsx(
+                "bg-[#08CF7C] hover:bg-[#009937]",
+                "rounded-lg",
+                "px-7 py-2.5",
+                "cursor-pointer",
+                "text-white font-bold",
+                !available && "pointer-events-none opacity-70"
+              )}
+            >
+              Quay
+            </button>
+            <button
+              onClick={handleClickRefresh}
+              className="bg-[#E53535] cursor-pointer rounded-lg px-4 py-2.5 text-white font-bold"
+            >
+              Làm mới
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

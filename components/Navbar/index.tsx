@@ -1,7 +1,13 @@
+"use client";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
+import { Login } from "../Login";
+import CheckLogin from "@/app/features/checkLogin";
 
 export const Navbar = () => {
+  const [openLoginModal, setOpenLoginModal] = useState(false);
+  const checkLogin = CheckLogin();
+
   return (
     <nav className="bg-white shadow">
       <div className="max-w-full flex justify-between mx-auto py-2 md:py-4 px-2 md:px-10">
@@ -13,8 +19,15 @@ export const Navbar = () => {
             height={32}
           />
         </div>
-        <button className="flex">Đăng nhập (Admin)</button>
+        {checkLogin ? (
+          <p>Đã đăng nhập</p>
+        ) : (
+          <button className="flex" onClick={() => setOpenLoginModal(true)}>
+            Đăng nhập (Admin)
+          </button>
+        )}
       </div>
+      <Login open={openLoginModal} setOpen={setOpenLoginModal} />
     </nav>
   );
 };
