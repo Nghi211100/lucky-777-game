@@ -4,15 +4,15 @@ import { useQuery } from "react-query";
 
 export const LOTTERY_PLAYER_LIST_ENDPOINT = "/api/lottery?limit=50&page=1";
 
-interface LittoryPlayerList {
+interface LotteryPlayerList {
   data: UsersList[];
 }
 
-const useLittoryPlayerListAPI = () => {
+const useLotteryPlayerListAPI = () => {
   const lotteryPlayerList = useQuery({
     queryKey: LOTTERY_PLAYER_LIST_ENDPOINT,
     queryFn: async () => {
-      const result = await axios.get<LittoryPlayerList>(
+      const result = await axios.get<LotteryPlayerList>(
         LOTTERY_PLAYER_LIST_ENDPOINT
       );
       return result.data.data;
@@ -22,4 +22,4 @@ const useLittoryPlayerListAPI = () => {
   return lotteryPlayerList;
 };
 
-export default useLittoryPlayerListAPI;
+export default useLotteryPlayerListAPI;

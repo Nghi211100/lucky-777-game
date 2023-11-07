@@ -3,7 +3,7 @@ import api from "../config.axios";
 
 export const AVAILABLE_PRIZE_ENDPOINT = "/api/lottery/available-prize";
 
-interface AvailablePrizeLevelRes {
+export interface AvailablePrizeLevelRes {
   data: {
     offset: number;
     prize: number;

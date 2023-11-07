@@ -1,7 +1,9 @@
 import { useMutation, useQueryClient } from "react-query";
-import { AVAILABLE_PRIZE_ENDPOINT } from "./availablePrizeLevel.service";
-import { LOTTERY_PLAYER_LIST_ENDPOINT } from "./lotteryPlayerList.service";
 import api from "../config.axios";
+import {
+  AVAILABLE_PRIZE_ENDPOINT,
+  AvailablePrizeLevelRes,
+} from "./availablePrizeLevel.service";
 
 const ANNOUNCE_LOTTERY_PRIZE_ENDPOINT = "/api/lottery/announce-prize";
 
@@ -15,30 +17,42 @@ interface AnnounceLotteryPrizeRes {
     prize: number;
     prizeTicket: number;
   };
+  metaData: IAnnounceLotteryPrize;
+}
+
+function padWithLeadingZero(num: number, maxLength: number = 3): number[] {
+  const result = String(num).padStart(maxLength, "0");
+
+  // @ts-ignore
+  return [...result];
 }
 
 const useAnnounceLotteryPrizeAPI = () => {
   const queryClient = useQueryClient();
   const loginRes = useMutation({
     mutationKey: ANNOUNCE_LOTTERY_PRIZE_ENDPOINT,
-    mutationFn: async (req: IAnnounceLotteryPrize) => {
+    mutationFn: async () => {
+      const prizeLevel = await api.get<AvailablePrizeLevelRes>(
+        AVAILABLE_PRIZE_ENDPOINT
+      );
+
       const result = await api.post<AnnounceLotteryPrizeRes>(
         ANNOUNCE_LOTTERY_PRIZE_ENDPOINT,
         {
-          offset: req.offset,
-          prize: req.prize,
+          offset: prizeLevel.data.data.offset,
+          prize: prizeLevel.data.data.prize,
         }
       );
-      return result.data.data;
+
+      const prizeTicketArr = padWithLeadingZero(result.data.data.prizeTicket);
+      const nextPrize = result.data.metaData.prize;
+
+      return {
+        prizeTicketArr,
+        nextPrize,
+      };
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: AVAILABLE_PRIZE_ENDPOINT,
-      });
-      queryClient.invalidateQueries({
-        queryKey: LOTTERY_PLAYER_LIST_ENDPOINT,
-      });
-    },
+    onSuccess: () => {},
   });
 
   return loginRes;

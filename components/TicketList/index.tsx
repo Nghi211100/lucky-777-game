@@ -1,6 +1,5 @@
-import React from "react";
+import useLotteryPlayerListAPI from "@/hook/services/lotteryPlayerList.service";
 import { TicketDropdown } from "../TicketDropdown";
-import useLittoryPlayerListAPI from "@/hook/services/lotteryPlayerList.service";
 
 export interface UsersList {
   email: string;
@@ -11,7 +10,7 @@ export interface UsersList {
 }
 
 export const TicketList = () => {
-  const lotteryPlayerListAPI = useLittoryPlayerListAPI();
+  const lotteryPlayerListAPI = useLotteryPlayerListAPI();
   console.log(lotteryPlayerListAPI);
 
   const hashEmail = (email: string) => {
