@@ -15,11 +15,11 @@ export default function Modal({
 }: {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  handleOnClick: () => void;
+  handleOnClick?: () => void;
   children: ReactNode;
   title: string;
-  buttonName: string;
-  loading: boolean;
+  buttonName?: string;
+  loading?: boolean;
 }) {
   const cancelButtonRef = useRef(null);
 
@@ -54,9 +54,9 @@ export default function Modal({
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-[880px]">
                 <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                  <div className="sm:flex sm:items-start">
+                  <div className="w-full sm:flex sm:items-start">
                     <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
                       <InformationCircleIcon
                         className="h-6 w-6 text-blue-600"
@@ -66,7 +66,7 @@ export default function Modal({
                     <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                       <Dialog.Title
                         as="h3"
-                        className="text-lg text-center font-bold leading-6 text-gray-900"
+                        className="text-xl text-center font-bold leading-6 text-gray-900"
                       >
                         {title}
                       </Dialog.Title>
@@ -85,28 +85,30 @@ export default function Modal({
                   >
                     Đóng
                   </button>
-                  <button
-                    type="button"
-                    className={clsx(
-                      "bg-[#08CF7C] hover:bg-[#009937]",
-                      "rounded-lg",
-                      "px-7 py-2.5",
-                      "cursor-pointer",
-                      "text-white font-bold",
-                      "min-w-[140px]",
-                      "flex justify-center items-center"
-                    )}
-                    onClick={handleOnClick}
-                    ref={cancelButtonRef}
-                  >
-                    {!loading ? (
-                      buttonName
-                    ) : (
-                      <span className={clsx(loading && "animate-spin")}>
-                        <ArrowPathIcon width={16} height={16} />
-                      </span>
-                    )}
-                  </button>
+                  {buttonName && (
+                    <button
+                      type="button"
+                      className={clsx(
+                        "bg-[#08CF7C] hover:bg-[#009937]",
+                        "rounded-lg",
+                        "px-7 py-2.5",
+                        "cursor-pointer",
+                        "text-white font-bold",
+                        "min-w-[140px]",
+                        "flex justify-center items-center"
+                      )}
+                      onClick={handleOnClick}
+                      ref={cancelButtonRef}
+                    >
+                      {!loading ? (
+                        buttonName
+                      ) : (
+                        <span className={clsx(loading && "animate-spin")}>
+                          <ArrowPathIcon width={16} height={16} />
+                        </span>
+                      )}
+                    </button>
+                  )}
                 </div>
               </Dialog.Panel>
             </Transition.Child>

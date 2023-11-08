@@ -9,12 +9,11 @@ const Panel = () => {
         "bg-[linear-gradient(270deg,#DEFBAE_0%,#08C978_60.68%)]",
         "text-white",
         "rounded-lg",
-        "overflow-hidden",
-        "relative z-10",
+        "relative",
         "w-full h-[96px] md:h-[200px]"
       )}
     >
-      <div className="relative z-20 w-full h-full flex flex-col justify-center">
+      <div className="relative w-full h-[96px] md:h-[200px] flex flex-col justify-center">
         <div className="max-w-[calc(100%-130px+32px)] md:max-w-none p-4 md:py-7 md:px-6 ">
           <div
             className={clsx(
@@ -30,7 +29,7 @@ const Panel = () => {
           </p>
         </div>
       </div>
-      <div className="absolute bottom-0 right-0 -z-10">
+      <div className="absolute bottom-0 right-0">
         <div className="relative w-[428px] h-[160px] md:block hidden">
           <Image
             src={"/images/bounty.png"}

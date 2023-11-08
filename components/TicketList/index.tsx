@@ -1,5 +1,7 @@
 import useLotteryPlayerListAPI from "@/hook/services/lotteryPlayerList.service";
-import { TicketDropdown } from "../TicketDropdown";
+import { TicketModal } from "../TicketModal";
+import { useState } from "react";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
 export interface UsersList {
   email: string;
@@ -9,13 +11,16 @@ export interface UsersList {
   id: number;
 }
 
+export const hashEmail = (email: string) => {
+  return email.replace(/(\S{2})(\S*)@/g, "$1***@");
+};
+
 export const TicketList = () => {
   const lotteryPlayerListAPI = useLotteryPlayerListAPI();
-  console.log(lotteryPlayerListAPI);
-
-  const hashEmail = (email: string) => {
-    return email.replace(/(\S{2})(\S*)@/g, "$1***@");
-  };
+  const [openTicketDetail, setOpenTicketDetial] = useState(false);
+  const [ticketDetailSelected, setTicketDetailSelected] = useState<number[]>(
+    []
+  );
 
   if (!lotteryPlayerListAPI.data) return null;
 
@@ -29,9 +34,9 @@ export const TicketList = () => {
         </tr>
       </thead>
       <tbody>
-        {lotteryPlayerListAPI.data.map((user: UsersList) => (
+        {lotteryPlayerListAPI.data.map((user: UsersList, idx) => (
           <tr key={user.email} className="border-b border-neutral-100">
-            <td className="py-3 px-2 text-center font-bold">{user.id}</td>
+            <td className="py-3 px-2 text-center font-bold">{idx + 1}</td>
             <td className="py-3 px-2">
               <p className="font-bold text-lg">{user.fullName}</p>
               <p className="text-[#82878C] pt-0.5 text-sm">
@@ -40,7 +45,18 @@ export const TicketList = () => {
             </td>
             <td className="py-3 px-2 text-lg">
               {user.ticketDetail.length > 1 ? (
-                <TicketDropdown ticketList={user.ticketDetail} />
+                <>
+                  <button
+                    onClick={() => {
+                      setOpenTicketDetial(true);
+                      setTicketDetailSelected(user.ticketDetail);
+                    }}
+                    className="text-neutral-900 flex gap-2 items-center"
+                  >
+                    {user.ticketDetail[0]}{" "}
+                    <ChevronDownIcon width={16} height={16} />
+                  </button>
+                </>
               ) : (
                 user.ticketDetail[0]
               )}
@@ -48,6 +64,11 @@ export const TicketList = () => {
           </tr>
         ))}
       </tbody>
+      <TicketModal
+        ticketList={ticketDetailSelected}
+        open={openTicketDetail}
+        setOpen={setOpenTicketDetial}
+      />
     </table>
   );
 };

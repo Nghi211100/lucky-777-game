@@ -1,5 +1,6 @@
 import { ILotteryPrize } from "@/hook/services/listPrizeTicket.service";
 import React from "react";
+import { hashEmail } from ".";
 
 export interface ITicketPrizeTableProps {
   data: ILotteryPrize[];
@@ -28,7 +29,9 @@ export const TicketPrizeTable: React.FC<ITicketPrizeTableProps> = ({
               <td className="py-3 px-2 text-center font-bold">{user.prize}</td>
               <td className="py-3 px-2">
                 <p className="font-bold text-lg">{user.fullName}</p>
-                <p className="text-[#82878C] pt-0.5 text-sm">{user.email}</p>
+                <p className="text-[#82878C] pt-0.5 text-sm">
+                  {hashEmail(user.email)}
+                </p>
               </td>
               <td className="py-3 px-2 text-lg">{user.prizeTicket}</td>
             </tr>
